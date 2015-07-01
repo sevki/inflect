@@ -318,6 +318,15 @@ func (rs *Ruleset) isUncountable(word string) bool {
 }
 
 // returns the plural form of a singular word
+func (rs *Ruleset) IsPlural(word string) bool {
+	if rs.isUncountable(word) {
+		return true
+	}
+	return Singularize(Pluralize(word)) == word
+	//	return Pluralize(word) != word && Singularize(word) == word
+}
+
+// returns the plural form of a singular word
 func (rs *Ruleset) Pluralize(word string) string {
 	if len(word) == 0 {
 		return word
@@ -558,6 +567,10 @@ func AddAcronym(word string) {
 
 func AddUncountable(word string) {
 	defaultRuleset.AddUncountable(word)
+}
+
+func IsPlural(word string) bool {
+	return defaultRuleset.IsPlural(word)
 }
 
 func Pluralize(word string) string {

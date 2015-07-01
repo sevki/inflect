@@ -1,8 +1,8 @@
 package inflect
 
-import (
-	"testing"
-)
+import "testing"
+
+import "github.com/sevki/stemmer"
 
 // assert helper
 
@@ -12,8 +12,165 @@ func assertEqual(t *testing.T, a, b string) {
 	}
 }
 
-// test data
+func assert(t *testing.T, a, b bool, word string, stemCount int) {
+	if a != b {
+		if a {
+			t.Errorf("inflect: %s is single not plural -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word), stemCount)
+		} else {
+			t.Errorf("inflect: %s is plural not single -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word), stemCount)
+		}
+	}
+}
 
+// test data
+var Singles = map[string]bool{
+	"search":        true,
+	"switch":        true,
+	"fix":           true,
+	"box":           true,
+	"process":       true,
+	"address":       true,
+	"case":          true,
+	"stack":         true,
+	"wish":          true,
+	"fish":          true,
+	"jeans":         true,
+	"funky jeans":   true,
+	"category":      true,
+	"query":         true,
+	"ability":       true,
+	"agency":        true,
+	"movie":         true,
+	"archive":       true,
+	"index":         true,
+	"wife":          true,
+	"safe":          true,
+	"half":          true,
+	"move":          true,
+	"salesperson":   true,
+	"person":        true,
+	"spokesman":     true,
+	"man":           true,
+	"woman":         true,
+	"basis":         true,
+	"diagnosis":     true,
+	"diagnosis_a":   true,
+	"datum":         true,
+	"medium":        true,
+	"stadium":       true,
+	"analysis":      true,
+	"node_child":    true,
+	"child":         true,
+	"experience":    true,
+	"day":           true,
+	"comment":       true,
+	"foobar":        true,
+	"newsletter":    true,
+	"quiz":          true,
+	"perspective":   true,
+	"ox":            true,
+	"photo":         true,
+	"buffalo":       true,
+	"tomato":        true,
+	"dwarf":         true,
+	"elf":           true,
+	"bus":           true,
+	"status":        true,
+	"status_code":   true,
+	"mouse":         true,
+	"louse":         true,
+	"house":         true,
+	"octopus":       true,
+	"virus":         true,
+	"alias":         true,
+	"portfolio":     true,
+	"vertex":        true,
+	"matrix":        true,
+	"matrix_fu":     true,
+	"axis":          true,
+	"testis":        true,
+	"crisis":        true,
+	"shoe":          true,
+	"horse":         true,
+	"prize":         true,
+	"edge":          true,
+	"database":      true,
+	"searches":      false,
+	"switches":      false,
+	"fixes":         false,
+	"boxes":         false,
+	"processes":     false,
+	"addresses":     false,
+	"cases":         false,
+	"stacks":        false,
+	"wishes":        false,
+	"categories":    false,
+	"queries":       false,
+	"abilities":     false,
+	"agencies":      false,
+	"movies":        false,
+	"archives":      false,
+	"indices":       false,
+	"wives":         false,
+	"saves":         false,
+	"halves":        false,
+	"moves":         false,
+	"salespeople":   false,
+	"people":        false,
+	"spokesmen":     false,
+	"men":           false,
+	"women":         false,
+	"bases":         false,
+	"diagnoses":     false,
+	"diagnosis_as":  false,
+	"data":          false,
+	"media":         false,
+	"stadia":        false,
+	"analyses":      false,
+	"node_children": false,
+	"children":      false,
+	"experiences":   false,
+	"days":          false,
+	"comments":      false,
+	"foobars":       false,
+	"newsletters":   false,
+	"quizzes":       false,
+	"perspectives":  false,
+	"oxen":          false,
+	"photos":        false,
+	"buffaloes":     false,
+	"tomatoes":      false,
+	"dwarves":       false,
+	"elves":         false,
+	"buses":         false,
+	"statuses":      false,
+	"status_codes":  false,
+	"mice":          false,
+	"lice":          false,
+	"houses":        false,
+	"octopi":        false,
+	"viri":          false,
+	"aliases":       false,
+	"portfolios":    false,
+	"vertices":      false,
+	"matrices":      false,
+	"matrix_fus":    false,
+	"axes":          false,
+	"testes":        false,
+	"crises":        false,
+	"shoes":         false,
+	"horses":        false,
+	"prizes":        false,
+	"edges":         false,
+	"databases":     false,
+	//	"information":  false,
+	//	"series":       false,
+	//	"news":          false,
+	//	"rice":          false,
+	//	"old_news":      false,
+	//	"species":       false,
+	//	"equipment":     false,
+}
 var SingularToPlural = map[string]string{
 	"search":      "searches",
 	"switch":      "switches",
@@ -318,6 +475,12 @@ var AcronymCases = []*AcronymCase{
 func TestPluralizePlurals(t *testing.T) {
 	assertEqual(t, "plurals", Pluralize("plurals"))
 	assertEqual(t, "Plurals", Pluralize("Plurals"))
+}
+
+func TestIsPlural(t *testing.T) {
+	for k, v := range Singles {
+		assert(t, v, IsPlural(k), k, stemmer.Measure([]byte(k)))
+	}
 }
 
 func TestPluralizeEmptyString(t *testing.T) {
