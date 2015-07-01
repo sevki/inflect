@@ -477,7 +477,7 @@ func TestPluralizePlurals(t *testing.T) {
 
 func TestIsPlural(t *testing.T) {
 	for k, v := range Singles {
-		assert(t, v, IsPlural(k))
+		assert(t, v, IsPlural(k), k)
 	}
 }
 
