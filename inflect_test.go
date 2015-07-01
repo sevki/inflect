@@ -2,8 +2,6 @@ package inflect
 
 import "testing"
 
-import "github.com/sevki/stemmer"
-
 // assert helper
 
 func assertEqual(t *testing.T, a, b string) {
@@ -12,12 +10,12 @@ func assertEqual(t *testing.T, a, b string) {
 	}
 }
 
-func assert(t *testing.T, a, b bool, word string, stemCount int) {
+func assert(t *testing.T, a, b bool, word string) {
 	if a != b {
 		if a {
-			t.Errorf("inflect: %s is single not plural -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word), stemCount)
+			t.Errorf("inflect: %s is single not plural -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word))
 		} else {
-			t.Errorf("inflect: %s is plural not single -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word), stemCount)
+			t.Errorf("inflect: %s is plural not single -- plural:%s singular:%s %d", word, Pluralize(word), Singularize(word))
 		}
 	}
 }
@@ -479,7 +477,7 @@ func TestPluralizePlurals(t *testing.T) {
 
 func TestIsPlural(t *testing.T) {
 	for k, v := range Singles {
-		assert(t, v, IsPlural(k), k, stemmer.Measure([]byte(k)))
+		assert(t, v, IsPlural(k))
 	}
 }
 
